@@ -62,16 +62,36 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
     const currentSize = get().canvasSize;
     const images = get().images;
     
+    // Calculate center points
+    const oldCenterX = currentSize.width / 2;
+    const oldCenterY = currentSize.height / 2;
+    const newCenterX = size.width / 2;
+    const newCenterY = size.height / 2;
+    
     // Calculate scale factors
     const scaleX = size.width / currentSize.width;
     const scaleY = size.height / currentSize.height;
     
-    // Reposition all images proportionally
-    const updatedImages = images.map((img) => ({
-      ...img,
-      x: img.x * scaleX,
-      y: img.y * scaleY,
-    }));
+    // Reposition all images relative to center to maintain visual position
+    const updatedImages = images.map((img) => {
+      // Calculate distance from old center
+      const offsetX = img.x + (img.width / 2) - oldCenterX;
+      const offsetY = img.y + (img.height / 2) - oldCenterY;
+      
+      // Scale the offset
+      const newOffsetX = offsetX * scaleX;
+      const newOffsetY = offsetY * scaleY;
+      
+      // Calculate new position from new center
+      const newX = newCenterX + newOffsetX - (img.width / 2);
+      const newY = newCenterY + newOffsetY - (img.height / 2);
+      
+      return {
+        ...img,
+        x: newX,
+        y: newY,
+      };
+    });
     
     set({ canvasSize: size, images: updatedImages });
   },
