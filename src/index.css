@@ -1,0 +1,264 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+:root {
+  --radius: 1rem;
+  
+  /* Neumorphic Base Colors */
+  --neu-base: #e0e5ec;
+  --neu-surface: #e0e5ec;
+  
+  /* Neumorphic Shadows */
+  --neu-shadow-light: rgba(255, 255, 255, 0.7);
+  --neu-shadow-dark: rgba(163, 177, 198, 0.6);
+  --neu-shadow-inset-light: rgba(255, 255, 255, 0.5);
+  --neu-shadow-inset-dark: rgba(163, 177, 198, 0.4);
+  
+  /* Shadow Distances */
+  --neu-distance-sm: 4px;
+  --neu-distance-md: 8px;
+  --neu-distance-lg: 12px;
+  --neu-distance-xl: 16px;
+  
+  /* Original theme colors adapted for Neumorphism */
+  --background: #e0e5ec;
+  --foreground: #4a5568;
+  --card: #e0e5ec;
+  --card-foreground: #4a5568;
+  --popover: #e0e5ec;
+  --popover-foreground: #4a5568;
+  --primary: #667eea;
+  --primary-foreground: #ffffff;
+  --secondary: #d1d5db;
+  --secondary-foreground: #4a5568;
+  --muted: #cbd5e0;
+  --muted-foreground: #718096;
+  --accent: #a0aec0;
+  --accent-foreground: #2d3748;
+  --destructive: #ef4444;
+  --border: rgba(163, 177, 198, 0.3);
+  --input: #e0e5ec;
+  --ring: #667eea;
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: #e0e5ec;
+  --sidebar-foreground: #4a5568;
+  --sidebar-primary: #667eea;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #d1d5db;
+  --sidebar-accent-foreground: #4a5568;
+  --sidebar-border: rgba(163, 177, 198, 0.3);
+  --sidebar-ring: #667eea;
+}
+
+.dark {
+  /* Neumorphic Base Colors - Dark Mode */
+  --neu-base: #2d3748;
+  --neu-surface: #1a202c;
+  
+  /* Neumorphic Shadows - Dark Mode */
+  --neu-shadow-light: rgba(255, 255, 255, 0.05);
+  --neu-shadow-dark: rgba(0, 0, 0, 0.5);
+  --neu-shadow-inset-light: rgba(255, 255, 255, 0.03);
+  --neu-shadow-inset-dark: rgba(0, 0, 0, 0.4);
+  
+  /* Dark mode theme colors */
+  --background: #2d3748;
+  --foreground: #e2e8f0;
+  --card: #1a202c;
+  --card-foreground: #e2e8f0;
+  --popover: #1a202c;
+  --popover-foreground: #e2e8f0;
+  --primary: #805ad5;
+  --primary-foreground: #ffffff;
+  --secondary: #4a5568;
+  --secondary-foreground: #e2e8f0;
+  --muted: #374151;
+  --muted-foreground: #a0aec0;
+  --accent: #4a5568;
+  --accent-foreground: #e2e8f0;
+  --destructive: #f56565;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: #1a202c;
+  --ring: #805ad5;
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: #1a202c;
+  --sidebar-foreground: #e2e8f0;
+  --sidebar-primary: #805ad5;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #4a5568;
+  --sidebar-accent-foreground: #e2e8f0;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #805ad5;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    transition-property: color, background-color, border-color, box-shadow;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Color input custom styling for neumorphism */
+  input[type="color"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: none;
+    outline: none;
+  }
+  
+  input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+    border: none;
+  }
+  
+  input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 0.5rem;
+  }
+  
+  input[type="color"]::-moz-color-swatch {
+    border: none;
+    border-radius: 0.5rem;
+  }
+}
+
+@utility scrollbar-hidden {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility neu-raised {
+  background: var(--neu-surface);
+  box-shadow: 
+    calc(-1 * var(--neu-distance-md)) calc(-1 * var(--neu-distance-md)) calc(var(--neu-distance-xl)) var(--neu-shadow-light),
+    var(--neu-distance-md) var(--neu-distance-md) calc(var(--neu-distance-xl)) var(--neu-shadow-dark);
+}
+
+@utility neu-raised-sm {
+  background: var(--neu-surface);
+  box-shadow: 
+    calc(-1 * var(--neu-distance-sm)) calc(-1 * var(--neu-distance-sm)) calc(var(--neu-distance-md)) var(--neu-shadow-light),
+    var(--neu-distance-sm) var(--neu-distance-sm) calc(var(--neu-distance-md)) var(--neu-shadow-dark);
+}
+
+@utility neu-raised-lg {
+  background: var(--neu-surface);
+  box-shadow: 
+    calc(-1 * var(--neu-distance-lg)) calc(-1 * var(--neu-distance-lg)) calc(var(--neu-distance-xl) * 1.5) var(--neu-shadow-light),
+    var(--neu-distance-lg) var(--neu-distance-lg) calc(var(--neu-distance-xl) * 1.5) var(--neu-shadow-dark);
+}
+
+@utility neu-inset {
+  background: var(--neu-surface);
+  box-shadow: 
+    inset calc(-1 * var(--neu-distance-sm)) calc(-1 * var(--neu-distance-sm)) calc(var(--neu-distance-md)) var(--neu-shadow-inset-light),
+    inset var(--neu-distance-sm) var(--neu-distance-sm) calc(var(--neu-distance-md)) var(--neu-shadow-inset-dark);
+}
+
+@utility neu-inset-deep {
+  background: var(--neu-surface);
+  box-shadow: 
+    inset calc(-1 * var(--neu-distance-md)) calc(-1 * var(--neu-distance-md)) calc(var(--neu-distance-lg)) var(--neu-shadow-inset-light),
+    inset var(--neu-distance-md) var(--neu-distance-md) calc(var(--neu-distance-lg)) var(--neu-shadow-inset-dark);
+}
+
+@utility neu-flat {
+  background: var(--neu-surface);
+  box-shadow: none;
+}
+
+@utility neu-button {
+  background: var(--neu-surface);
+  box-shadow: 
+    calc(-1 * var(--neu-distance-sm)) calc(-1 * var(--neu-distance-sm)) calc(var(--neu-distance-md)) var(--neu-shadow-light),
+    var(--neu-distance-sm) var(--neu-distance-sm) calc(var(--neu-distance-md)) var(--neu-shadow-dark);
+  transition: all 0.2s ease;
+  
+  &:hover:not(:disabled) {
+    box-shadow: 
+      calc(-1 * var(--neu-distance-md)) calc(-1 * var(--neu-distance-md)) calc(var(--neu-distance-lg)) var(--neu-shadow-light),
+      var(--neu-distance-md) var(--neu-distance-md) calc(var(--neu-distance-lg)) var(--neu-shadow-dark);
+    transform: translateY(-1px);
+  }
+  
+  &:active:not(:disabled) {
+    box-shadow: 
+      inset calc(-1 * var(--neu-distance-sm)) calc(-1 * var(--neu-distance-sm)) calc(var(--neu-distance-md)) var(--neu-shadow-inset-light),
+      inset var(--neu-distance-sm) var(--neu-distance-sm) calc(var(--neu-distance-md)) var(--neu-shadow-inset-dark);
+    transform: translateY(0);
+  }
+}
+
+@utility neu-card {
+  background: var(--neu-surface);
+  box-shadow: 
+    calc(-1 * var(--neu-distance-md)) calc(-1 * var(--neu-distance-md)) calc(var(--neu-distance-xl)) var(--neu-shadow-light),
+    var(--neu-distance-md) var(--neu-distance-md) calc(var(--neu-distance-xl)) var(--neu-shadow-dark);
+  border-radius: var(--radius);
+}
+
+@utility neu-panel {
+  background: var(--neu-surface);
+  box-shadow: 
+    calc(-1 * var(--neu-distance-lg)) calc(-1 * var(--neu-distance-lg)) calc(var(--neu-distance-xl) * 1.5) var(--neu-shadow-light),
+    var(--neu-distance-lg) var(--neu-distance-lg) calc(var(--neu-distance-xl) * 1.5) var(--neu-shadow-dark);
+  border-radius: calc(var(--radius) * 1.5);
+}
