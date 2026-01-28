@@ -7,6 +7,7 @@ import { GradientBackground } from './GradientBackground';
 import { TextureOverlay } from './TextureOverlay';
 import { ImageLayer } from './ImageLayer';
 import { Rulers } from './Rulers';
+import { AlignmentGuides } from './AlignmentGuides';
 import { useCanvasStore } from '@/store/useCanvasStore';
 
 interface CanvasAreaProps {
@@ -15,7 +16,48 @@ interface CanvasAreaProps {
 
 export function CanvasArea({ stageRef }: CanvasAreaProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { canvasSize, images, addImage, selectImage } = useCanvasStore();
+  const { canvasSize, images, addImage, selectImage, selectedImageId } = useCanvasStore();
+  
+  // Track alignment guide visibility
+  const [showVerticalGuide, setShowVerticalGuide] = useState(false);
+  const [showHorizontalGuide, setShowHorizontalGuide] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  
+  // Function to check if an image is centered
+  const checkAlignment = useCallback((imageId: string, x?: number, y?: number) => {
+    const image = images.find(img => img.id === imageId);
+    if (!image) return;
+
+    const threshold = 3; // Pixel threshold for "centered"
+    
+    // Use provided x/y (during drag) or current position (static)
+    const posX = x !== undefined ? x : image.x;
+    const posY = y !== undefined ? y : image.y;
+    
+    // Calculate image center position
+    const imageWidth = image.width * image.scaleX;
+    const imageHeight = image.height * image.scaleY;
+    const imageCenterX = posX + imageWidth / 2;
+    const imageCenterY = posY + imageHeight / 2;
+    
+    // Canvas center
+    const canvasCenterX = canvasSize.width / 2;
+    const canvasCenterY = canvasSize.height / 2;
+    
+    // Check alignment
+    const isHorizontallyCentered = Math.abs(imageCenterX - canvasCenterX) < threshold;
+    const isVerticallyCentered = Math.abs(imageCenterY - canvasCenterY) < threshold;
+    
+    // REVERSED: Show horizontal line when horizontally centered, vertical line when vertically centered
+    setShowHorizontalGuide(isHorizontallyCentered);
+    setShowVerticalGuide(isVerticallyCentered);
+  }, [images, canvasSize]);
+  
+  // Handle drag move to show guides in real-time
+  const handleImageDragMove = useCallback((imageId: string, x: number, y: number) => {
+    setIsDragging(true);
+    checkAlignment(imageId, x, y);
+  }, [checkAlignment]);
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -122,6 +164,27 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
     return () => window.removeEventListener('resize', updateScale);
   }, [canvasSize]);
 
+  // Check if selected image is centered (when not dragging)
+  useEffect(() => {
+    if (isDragging) return; // Don't override during drag
+    
+    if (!selectedImageId) {
+      setShowVerticalGuide(false);
+      setShowHorizontalGuide(false);
+      return;
+    }
+
+    checkAlignment(selectedImageId);
+  }, [selectedImageId, images, canvasSize, isDragging, checkAlignment]);
+  
+  // Reset dragging state when drag ends
+  useEffect(() => {
+    if (isDragging) {
+      const timer = setTimeout(() => setIsDragging(false), 100);
+      return () => clearTimeout(timer);
+    }
+  }, [images, isDragging]);
+
   const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent | TouchEvent>) => {
     // Deselect when clicking on empty area
     const clickedOnEmpty = e.target === e.target.getStage();
@@ -194,10 +257,18 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
                 {images
                   .sort((a, b) => a.zIndex - b.zIndex)
                   .map((image) => (
-                    <ImageLayer key={image.id} image={image} />
+                    <ImageLayer 
+                      key={image.id} 
+                      image={image}
+                      onDragMove={handleImageDragMove}
+                    />
                   ))}
               </Layer>
               <Layer listening={false}>
+                <AlignmentGuides 
+                  showVertical={showVerticalGuide} 
+                  showHorizontal={showHorizontalGuide} 
+                />
                 <Rulers />
               </Layer>
             </Stage>

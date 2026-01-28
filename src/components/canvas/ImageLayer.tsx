@@ -6,9 +6,10 @@ import type { CanvasImage } from '@/types/canvas';
 
 interface ImageLayerProps {
   image: CanvasImage;
+  onDragMove?: (imageId: string, x: number, y: number) => void;
 }
 
-export function ImageLayer({ image }: ImageLayerProps) {
+export function ImageLayer({ image, onDragMove }: ImageLayerProps) {
   const groupRef = useRef<Konva.Group>(null);
   const imageRef = useRef<Konva.Image>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
@@ -38,6 +39,13 @@ export function ImageLayer({ image }: ImageLayerProps) {
 
   const shadowBlur = (image.shadow / 100) * 50;
   const shadowOpacity = (image.shadow / 100) * 0.5;
+
+  const handleDragMove = (e: Konva.KonvaEventObject<DragEvent>) => {
+    const group = e.target;
+    if (onDragMove) {
+      onDragMove(image.id, group.x(), group.y());
+    }
+  };
 
   const handleDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
     const group = e.target;
@@ -119,6 +127,7 @@ export function ImageLayer({ image }: ImageLayerProps) {
         draggable
         onClick={() => selectImage(image.id)}
         onTap={() => selectImage(image.id)}
+        onDragMove={handleDragMove}
         onDragEnd={handleDragEnd}
         onTransformEnd={handleTransformEnd}
       >
