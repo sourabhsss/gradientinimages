@@ -264,7 +264,7 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
                     />
                   ))}
               </Layer>
-              <Layer listening={false}>
+              <Layer name="ui-guides" listening={false}>
                 <AlignmentGuides 
                   showVertical={showVerticalGuide} 
                   showHorizontal={showHorizontalGuide} 

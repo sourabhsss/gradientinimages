@@ -7,17 +7,32 @@ export const exportCanvas = async (
   filename: string = 'gradient-image.png'
 ): Promise<void> => {
   try {
+    // Find and hide UI guides layer (rulers and alignment lines)
+    const uiGuidesLayer = stage.findOne('.ui-guides');
+    const wasVisible = uiGuidesLayer?.visible() ?? false;
+    if (uiGuidesLayer) {
+      uiGuidesLayer.visible(false);
+    }
+    
     // Save current scale
     const currentScale = stage.scaleX();
     
-    // Apply export scale
-    stage.scale({ x: scale, y: scale });
+    // Reset scale to 1:1 for export (to maintain aspect ratio)
+    stage.scale({ x: 1, y: 1 });
     
-    // Export as data URL
-    const dataURL = stage.toDataURL({ pixelRatio: 1 });
+    // Export as data URL with the specified scale as pixel ratio
+    const dataURL = stage.toDataURL({ 
+      pixelRatio: scale,
+      mimeType: 'image/png',
+    });
     
     // Restore original scale
     stage.scale({ x: currentScale, y: currentScale });
+    
+    // Restore UI guides layer visibility
+    if (uiGuidesLayer) {
+      uiGuidesLayer.visible(wasVisible);
+    }
     
     // Create download link
     const link = document.createElement('a');
