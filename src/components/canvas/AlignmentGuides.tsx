@@ -9,7 +9,7 @@ interface AlignmentGuidesProps {
 export function AlignmentGuides({ showVertical, showHorizontal }: AlignmentGuidesProps) {
   const { canvasSize } = useCanvasStore();
   
-  const guideColor = '#FF006E'; // Bright pink/magenta like Canva
+  const guideColor = '#FFFFFF'; // White solid lines
   const guideWidth = 1.5;
 
   return (
@@ -20,7 +20,6 @@ export function AlignmentGuides({ showVertical, showHorizontal }: AlignmentGuide
           points={[canvasSize.width / 2, 0, canvasSize.width / 2, canvasSize.height]}
           stroke={guideColor}
           strokeWidth={guideWidth}
-          dash={[8, 4]}
           listening={false}
         />
       )}
@@ -31,7 +30,6 @@ export function AlignmentGuides({ showVertical, showHorizontal }: AlignmentGuide
           points={[0, canvasSize.height / 2, canvasSize.width, canvasSize.height / 2]}
           stroke={guideColor}
           strokeWidth={guideWidth}
-          dash={[8, 4]}
           listening={false}
         />
       )}

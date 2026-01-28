@@ -48,9 +48,10 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
     const isHorizontallyCentered = Math.abs(imageCenterX - canvasCenterX) < threshold;
     const isVerticallyCentered = Math.abs(imageCenterY - canvasCenterY) < threshold;
     
-    // REVERSED: Show horizontal line when horizontally centered, vertical line when vertically centered
-    setShowHorizontalGuide(isHorizontallyCentered);
-    setShowVerticalGuide(isVerticallyCentered);
+    // Show vertical line when image is horizontally centered (horizontal centers coincide)
+    // Show horizontal line when image is vertically centered (vertical centers coincide)
+    setShowVerticalGuide(isHorizontallyCentered);
+    setShowHorizontalGuide(isVerticallyCentered);
   }, [images, canvasSize]);
   
   // Handle drag move to show guides in real-time
