@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { CanvasImage, CanvasSize, GradientConfig, ExportScale } from '@/types/canvas';
+import type { CanvasImage, CanvasSize, GradientConfig, TextureConfig, ExportScale } from '@/types/canvas';
 
 interface CanvasState {
   // Canvas configuration
@@ -8,6 +8,9 @@ interface CanvasState {
   
   // Background gradient
   gradient: GradientConfig;
+  
+  // Texture overlay
+  texture: TextureConfig;
   
   // Images on canvas
   images: CanvasImage[];
@@ -24,6 +27,8 @@ interface CanvasState {
   // Actions
   setCanvasSize: (size: CanvasSize) => void;
   setGradient: (gradient: GradientConfig) => void;
+  setTexture: (texture: TextureConfig) => void;
+  setTextureOpacity: (opacity: number) => void;
   addImage: (image: Omit<CanvasImage, 'id' | 'zIndex'>) => void;
   updateImage: (id: string, updates: Partial<CanvasImage>) => void;
   deleteImage: (id: string) => void;
@@ -45,11 +50,19 @@ const DEFAULT_GRADIENT: GradientConfig = {
   category: 'vibrant',
 };
 
+const DEFAULT_TEXTURE: TextureConfig = {
+  id: 'none',
+  name: 'None',
+  type: 'none',
+  opacity: 0.3,
+};
+
 export const useCanvasStore = create<CanvasState>((set, get) => ({
   // Initial state
   canvasSize: { width: 1080, height: 1080, ratio: '1:1' },
   scale: 1,
   gradient: DEFAULT_GRADIENT,
+  texture: DEFAULT_TEXTURE,
   images: [],
   selectedImageId: null,
   framePadding: 40,
@@ -97,6 +110,14 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
   },
 
   setGradient: (gradient) => set({ gradient }),
+
+  setTexture: (texture) => set({ texture }),
+
+  setTextureOpacity: (opacity) => {
+    set((state) => ({
+      texture: { ...state.texture, opacity },
+    }));
+  },
 
   addImage: (image) => {
     const images = get().images;

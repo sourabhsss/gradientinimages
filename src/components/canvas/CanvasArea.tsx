@@ -4,6 +4,7 @@ import { useDropzone } from 'react-dropzone';
 import { Upload } from 'lucide-react';
 import type Konva from 'konva';
 import { GradientBackground } from './GradientBackground';
+import { TextureOverlay } from './TextureOverlay';
 import { ImageLayer } from './ImageLayer';
 import { useCanvasStore } from '@/store/useCanvasStore';
 
@@ -59,20 +60,26 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
     noClick: images.length > 0,
   });
 
-  // Calculate scale to fit canvas in viewport
+  // Calculate scale to fit canvas in viewport - ensure it stays within visible screen
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
     const updateScale = () => {
       if (!containerRef.current) return;
       const container = containerRef.current;
-      const padding = 40;
-      const availableWidth = container.clientWidth - padding * 2;
-      const availableHeight = container.clientHeight - padding * 2;
+      
+      // Conservative padding to ensure canvas always fits in viewport without scrolling
+      const horizontalPadding = 100; // 50px padding on each side
+      const verticalPadding = 120; // Extra vertical padding for comfortable viewing
+      
+      const availableWidth = container.clientWidth - horizontalPadding;
+      const availableHeight = container.clientHeight - verticalPadding;
       
       const scaleX = availableWidth / canvasSize.width;
       const scaleY = availableHeight / canvasSize.height;
-      const newScale = Math.min(scaleX, scaleY, 1);
+      
+      // Always scale down to fit, cap at 0.85 to ensure visibility
+      const newScale = Math.min(scaleX, scaleY, 0.85);
       
       setScale(newScale);
     };
@@ -120,7 +127,7 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
           </div>
         </div>
       ) : (
-        <div className="flex h-full items-center justify-center p-10">
+        <div className="flex h-full items-center justify-center p-6">
           {isDragActive && (
             <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-primary/10 backdrop-blur-sm">
               <div className="neu-raised-lg rounded-2xl p-8">
@@ -148,6 +155,7 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
             >
               <Layer>
                 <GradientBackground />
+                <TextureOverlay />
               </Layer>
               <Layer>
                 {images

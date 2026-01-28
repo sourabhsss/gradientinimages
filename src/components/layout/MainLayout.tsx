@@ -7,7 +7,7 @@ interface MainLayoutProps {
 
 export function MainLayout({ sidebar, canvas }: MainLayoutProps) {
   return (
-    <div className="flex h-[calc(100vh-73px)] overflow-hidden bg-background">
+    <div className="flex h-[calc(100vh-80px)] overflow-hidden bg-background">
       <aside className="w-80 flex-shrink-0 overflow-y-auto scrollbar-hidden">
         {sidebar}
       </aside>

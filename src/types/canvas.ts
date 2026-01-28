@@ -7,6 +7,13 @@ export interface GradientConfig {
   category: 'warm' | 'cool' | 'vibrant' | 'subtle' | 'dark' | 'special';
 }
 
+export interface TextureConfig {
+  id: string;
+  name: string;
+  type: 'noise' | 'grain' | 'dots' | 'lines' | 'grid' | 'paper' | 'canvas' | 'none';
+  opacity: number;
+}
+
 export interface CanvasImage {
   id: string;
   src: string;
