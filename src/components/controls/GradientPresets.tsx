@@ -74,7 +74,7 @@ export function GradientPresets() {
       </div>
 
       <ScrollArea className="h-[calc(100vh-500px)] scrollbar-hidden">
-        <div className="pr-4" style={{ background: 'var(--neu-surface)' }}>
+        <div className="px-4" style={{ background: 'var(--neu-surface)' }}>
           {favoriteGradients.length > 0 && (
             <>
               <div className="mb-3">
