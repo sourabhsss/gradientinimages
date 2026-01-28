@@ -9,6 +9,7 @@ interface ImageLayerProps {
 }
 
 export function ImageLayer({ image }: ImageLayerProps) {
+  const groupRef = useRef<Konva.Group>(null);
   const imageRef = useRef<Konva.Image>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
   const [htmlImage, setHtmlImage] = useState<HTMLImageElement | null>(null);
@@ -27,8 +28,8 @@ export function ImageLayer({ image }: ImageLayerProps) {
 
   // Attach transformer when selected
   useEffect(() => {
-    if (isSelected && transformerRef.current && imageRef.current) {
-      transformerRef.current.nodes([imageRef.current]);
+    if (isSelected && transformerRef.current && groupRef.current) {
+      transformerRef.current.nodes([groupRef.current]);
       transformerRef.current.getLayer()?.batchDraw();
     }
   }, [isSelected]);
@@ -38,9 +39,78 @@ export function ImageLayer({ image }: ImageLayerProps) {
   const shadowBlur = (image.shadow / 100) * 50;
   const shadowOpacity = (image.shadow / 100) * 0.5;
 
+  const handleDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
+    const group = e.target;
+    const canvasStore = useCanvasStore.getState();
+    const canvasSize = canvasStore.canvasSize;
+    
+    // Calculate bounds including padding
+    const totalWidth = (image.width + image.padding * 2) * image.scaleX;
+    const totalHeight = (image.height + image.padding * 2) * image.scaleY;
+    
+    // Constrain position to keep image within canvas
+    let newX = group.x();
+    let newY = group.y();
+    
+    // Left and top boundaries (accounting for padding offset)
+    const minX = image.padding * image.scaleX;
+    const minY = image.padding * image.scaleY;
+    
+    // Right and bottom boundaries
+    const maxX = canvasSize.width - totalWidth + image.padding * image.scaleX;
+    const maxY = canvasSize.height - totalHeight + image.padding * image.scaleY;
+    
+    newX = Math.max(minX, Math.min(maxX, newX));
+    newY = Math.max(minY, Math.min(maxY, newY));
+    
+    group.position({ x: newX, y: newY });
+    
+    updateImage(image.id, {
+      x: newX,
+      y: newY,
+    });
+  };
+
+  const handleTransformEnd = () => {
+    if (!groupRef.current) return;
+    const group = groupRef.current;
+    const canvasStore = useCanvasStore.getState();
+    const canvasSize = canvasStore.canvasSize;
+    
+    const newScaleX = group.scaleX();
+    const newScaleY = group.scaleY();
+    
+    // Calculate bounds with new scale
+    const totalWidth = (image.width + image.padding * 2) * newScaleX;
+    const totalHeight = (image.height + image.padding * 2) * newScaleY;
+    
+    // Constrain position after transform
+    let newX = group.x();
+    let newY = group.y();
+    
+    const minX = image.padding * newScaleX;
+    const minY = image.padding * newScaleY;
+    const maxX = canvasSize.width - totalWidth + image.padding * newScaleX;
+    const maxY = canvasSize.height - totalHeight + image.padding * newScaleY;
+    
+    newX = Math.max(minX, Math.min(maxX, newX));
+    newY = Math.max(minY, Math.min(maxY, newY));
+    
+    group.position({ x: newX, y: newY });
+    
+    updateImage(image.id, {
+      x: newX,
+      y: newY,
+      scaleX: newScaleX,
+      scaleY: newScaleY,
+      rotation: group.rotation(),
+    });
+  };
+
   return (
     <>
       <Group
+        ref={groupRef}
         x={image.x}
         y={image.y}
         rotation={image.rotation}
@@ -49,24 +119,8 @@ export function ImageLayer({ image }: ImageLayerProps) {
         draggable
         onClick={() => selectImage(image.id)}
         onTap={() => selectImage(image.id)}
-        onDragEnd={(e) => {
-          updateImage(image.id, {
-            x: e.target.x(),
-            y: e.target.y(),
-          });
-        }}
-        onTransformEnd={() => {
-          if (!imageRef.current) return;
-          const node = imageRef.current;
-          
-          updateImage(image.id, {
-            x: node.x(),
-            y: node.y(),
-            scaleX: node.scaleX(),
-            scaleY: node.scaleY(),
-            rotation: node.rotation(),
-          });
-        }}
+        onDragEnd={handleDragEnd}
+        onTransformEnd={handleTransformEnd}
       >
         {/* Shadow layer */}
         {image.shadow > 0 && (
@@ -109,11 +163,27 @@ export function ImageLayer({ image }: ImageLayerProps) {
       {isSelected && (
         <Transformer
           ref={transformerRef}
+          keepRatio={true}
+          enabledAnchors={[
+            'top-left',
+            'top-right',
+            'bottom-left',
+            'bottom-right',
+          ]}
+          rotateEnabled={true}
+          borderStroke="#3b82f6"
+          borderStrokeWidth={2}
+          anchorFill="#3b82f6"
+          anchorStroke="#ffffff"
+          anchorStrokeWidth={2}
+          anchorSize={12}
+          anchorCornerRadius={6}
           boundBoxFunc={(oldBox, newBox) => {
-            // Limit resize
+            // Minimum size constraint
             if (newBox.width < 50 || newBox.height < 50) {
               return oldBox;
             }
+            
             return newBox;
           }}
         />

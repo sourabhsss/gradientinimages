@@ -59,50 +59,62 @@ const DEFAULT_TEXTURE: TextureConfig = {
 
 export const useCanvasStore = create<CanvasState>((set, get) => ({
   // Initial state
-  canvasSize: { width: 1080, height: 1080, ratio: '1:1' },
+  canvasSize: { width: 800, height: 800, ratio: '1:1' },
   scale: 1,
   gradient: DEFAULT_GRADIENT,
   texture: DEFAULT_TEXTURE,
   images: [],
   selectedImageId: null,
-  framePadding: 40,
+  framePadding: 0,
   frameRadius: 12,
   frameShadow: 30,
   favoriteGradients: [],
 
   // Actions
   setCanvasSize: (size) => {
-    const currentSize = get().canvasSize;
     const images = get().images;
     
-    // Calculate center points
-    const oldCenterX = currentSize.width / 2;
-    const oldCenterY = currentSize.height / 2;
-    const newCenterX = size.width / 2;
-    const newCenterY = size.height / 2;
+    // Calculate available space in new canvas (with margin)
+    const margin = 40;
+    const availableWidth = size.width - (margin * 2);
+    const availableHeight = size.height - (margin * 2);
     
-    // Calculate scale factors
-    const scaleX = size.width / currentSize.width;
-    const scaleY = size.height / currentSize.height;
-    
-    // Reposition all images relative to center to maintain visual position
+    // Reposition and scale all images to fit in new canvas
     const updatedImages = images.map((img) => {
-      // Calculate distance from old center
-      const offsetX = img.x + (img.width / 2) - oldCenterX;
-      const offsetY = img.y + (img.height / 2) - oldCenterY;
+      // Calculate current actual dimensions with scale
+      const currentActualWidth = img.width * img.scaleX;
+      const currentActualHeight = img.height * img.scaleY;
       
-      // Scale the offset
-      const newOffsetX = offsetX * scaleX;
-      const newOffsetY = offsetY * scaleY;
+      // Check if image needs to be scaled down to fit new canvas
+      const targetWidth = availableWidth * 0.8;
+      const targetHeight = availableHeight * 0.8;
       
-      // Calculate new position from new center
-      const newX = newCenterX + newOffsetX - (img.width / 2);
-      const newY = newCenterY + newOffsetY - (img.height / 2);
+      let newScaleX = img.scaleX;
+      let newScaleY = img.scaleY;
+      
+      // If image is too large for new canvas, scale it down
+      if (currentActualWidth > targetWidth || currentActualHeight > targetHeight) {
+        const scaleToFitWidth = targetWidth / img.width;
+        const scaleToFitHeight = targetHeight / img.height;
+        const newScale = Math.min(scaleToFitWidth, scaleToFitHeight);
+        newScaleX = newScale;
+        newScaleY = newScale;
+      }
+      
+      // Calculate new dimensions after potential rescaling
+      const newWidth = img.width * newScaleX;
+      const newHeight = img.height * newScaleY;
+      
+      // Center the image in the new canvas
+      const newX = (size.width - newWidth) / 2;
+      const newY = (size.height - newHeight) / 2;
       
       return {
         ...img,
         x: newX,
         y: newY,
+        scaleX: newScaleX,
+        scaleY: newScaleY,
       };
     });
     

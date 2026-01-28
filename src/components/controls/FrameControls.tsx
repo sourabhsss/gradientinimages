@@ -1,6 +1,7 @@
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { useCanvasStore } from '@/store/useCanvasStore';
+import { ZoomIn } from 'lucide-react';
 
 export function FrameControls() {
   const {
@@ -11,9 +12,24 @@ export function FrameControls() {
     setFrameRadius,
     setFrameShadow,
     selectedImageId,
+    images,
+    updateImage,
   } = useCanvasStore();
 
   const isDisabled = !selectedImageId;
+  
+  // Get current zoom level (scale) of selected image
+  const selectedImage = images.find(img => img.id === selectedImageId);
+  const currentZoom = selectedImage ? Math.round(selectedImage.scaleX * 100) : 100;
+  
+  const handleZoomChange = (value: number) => {
+    if (!selectedImageId) return;
+    const scale = value / 100;
+    updateImage(selectedImageId, {
+      scaleX: scale,
+      scaleY: scale,
+    });
+  };
 
   return (
     <div className="space-y-4 p-4">
@@ -25,6 +41,30 @@ export function FrameControls() {
       </div>
 
       <div className="space-y-4">
+        <div className="neu-card space-y-2 p-3 rounded-xl">
+          <div className="flex items-center justify-between">
+            <Label className="text-xs font-medium flex items-center gap-1">
+              <ZoomIn className="h-3 w-3" />
+              Image Zoom
+            </Label>
+            <span className="neu-raised-sm text-xs font-semibold px-2 py-0.5 rounded-lg">{currentZoom}%</span>
+          </div>
+          <div className="neu-inset rounded-full p-1">
+            <Slider
+              value={[currentZoom]}
+              onValueChange={(value) => handleZoomChange(value[0])}
+              min={10}
+              max={200}
+              step={5}
+              disabled={isDisabled}
+              className="w-full"
+            />
+          </div>
+          <p className="text-[10px] text-muted-foreground">
+            Tip: Drag corner handles to resize
+          </p>
+        </div>
+
         <div className="neu-card space-y-2 p-3 rounded-xl">
           <div className="flex items-center justify-between">
             <Label className="text-xs font-medium">Padding</Label>

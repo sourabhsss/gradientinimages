@@ -6,6 +6,7 @@ import type Konva from 'konva';
 import { GradientBackground } from './GradientBackground';
 import { TextureOverlay } from './TextureOverlay';
 import { ImageLayer } from './ImageLayer';
+import { Rulers } from './Rulers';
 import { useCanvasStore } from '@/store/useCanvasStore';
 
 interface CanvasAreaProps {
@@ -23,22 +24,39 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
         reader.onload = () => {
           const img = new window.Image();
           img.onload = () => {
-            // Calculate size to fit on canvas
-            const maxSize = Math.min(canvasSize.width, canvasSize.height) * 0.6;
-            const scale = Math.min(maxSize / img.width, maxSize / img.height);
+            const padding = 0;
+            
+            // Calculate available space (leave some margin from edges)
+            const margin = 40; // Minimum margin from canvas edges
+            const availableWidth = canvasSize.width - (margin * 2);
+            const availableHeight = canvasSize.height - (margin * 2);
+            
+            // Calculate scale to fit the image within 80% of available space
+            // This ensures the image fits comfortably with room to spare
+            const targetWidth = availableWidth * 0.8;
+            const targetHeight = availableHeight * 0.8;
+            
+            const scaleToFitWidth = targetWidth / img.width;
+            const scaleToFitHeight = targetHeight / img.height;
+            const scale = Math.min(scaleToFitWidth, scaleToFitHeight, 1); // Don't scale up
+            
             const width = img.width * scale;
             const height = img.height * scale;
 
+            // Center the image perfectly in the canvas
+            const x = (canvasSize.width - width) / 2;
+            const y = (canvasSize.height - height) / 2;
+
             addImage({
               src: reader.result as string,
-              x: (canvasSize.width - width) / 2,
-              y: (canvasSize.height - height) / 2,
+              x,
+              y,
               width,
               height,
               rotation: 0,
               scaleX: 1,
               scaleY: 1,
-              padding: 40,
+              padding,
               radius: 12,
               shadow: 30,
               visible: true,
@@ -68,18 +86,33 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
       if (!containerRef.current) return;
       const container = containerRef.current;
       
-      // Conservative padding to ensure canvas always fits in viewport without scrolling
-      const horizontalPadding = 100; // 50px padding on each side
-      const verticalPadding = 120; // Extra vertical padding for comfortable viewing
+      // Account for the padding already applied to the container
+      // px-8 = 32px on each side (64px total horizontal)
+      // py-12 = 48px on each side (96px total vertical)
+      const horizontalPadding = 64;
+      const verticalPadding = 96;
       
-      const availableWidth = container.clientWidth - horizontalPadding;
-      const availableHeight = container.clientHeight - verticalPadding;
+      // Additional safety margin to ensure rulers and edges are always visible
+      // Increase margins significantly for portrait orientations (height > width)
+      const isPortrait = canvasSize.height > canvasSize.width;
+      const aspectRatio = canvasSize.height / canvasSize.width;
+      
+      // More aggressive margins for very tall canvases (9:16 and similar)
+      const isVeryTall = aspectRatio > 1.5;
+      
+      const horizontalMargin = 80; // More space for rulers
+      const verticalMargin = isVeryTall ? 140 : (isPortrait ? 120 : 100);
+      
+      const availableWidth = container.clientWidth - horizontalPadding - horizontalMargin;
+      const availableHeight = container.clientHeight - verticalPadding - verticalMargin;
       
       const scaleX = availableWidth / canvasSize.width;
       const scaleY = availableHeight / canvasSize.height;
       
-      // Always scale down to fit, cap at 0.85 to ensure visibility
-      const newScale = Math.min(scaleX, scaleY, 0.85);
+      // Scale to fit comfortably with visible rulers
+      // Even lower cap for very tall canvases
+      const maxScale = isVeryTall ? 0.7 : (isPortrait ? 0.75 : 0.85);
+      const newScale = Math.min(scaleX, scaleY, maxScale);
       
       setScale(newScale);
     };
@@ -101,7 +134,7 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
     <div
       ref={containerRef}
       {...getRootProps()}
-      className="relative h-full w-full overflow-hidden"
+      className="relative h-full w-full overflow-hidden px-8 py-12"
     >
       <input {...getInputProps()} />
 
@@ -127,7 +160,7 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
           </div>
         </div>
       ) : (
-        <div className="flex h-full items-center justify-center p-6">
+        <div className="flex h-full items-center justify-center">
           {isDragActive && (
             <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-primary/10 backdrop-blur-sm">
               <div className="neu-raised-lg rounded-2xl p-8">
@@ -138,7 +171,7 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
           )}
           
           <div
-            className="neu-raised-lg rounded-2xl overflow-hidden"
+            className="neu-raised-lg overflow-hidden"
             style={{
               width: canvasSize.width * scale,
               height: canvasSize.height * scale,
@@ -163,6 +196,9 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
                   .map((image) => (
                     <ImageLayer key={image.id} image={image} />
                   ))}
+              </Layer>
+              <Layer listening={false}>
+                <Rulers />
               </Layer>
             </Stage>
           </div>

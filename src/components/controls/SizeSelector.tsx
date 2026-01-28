@@ -3,10 +3,10 @@ import { Input } from '@/components/ui/input';
 import { useCanvasStore } from '@/store/useCanvasStore';
 
 const presetSizes = [
-  { ratio: '1:1', width: 1080, height: 1080, label: 'Square' },
-  { ratio: '4:5', width: 1080, height: 1350, label: 'Portrait' },
-  { ratio: '16:9', width: 1920, height: 1080, label: 'Landscape' },
-  { ratio: '9:16', width: 1080, height: 1920, label: 'Story' },
+  { ratio: '1:1', width: 800, height: 800, label: 'Square' },
+  { ratio: '4:5', width: 640, height: 800, label: 'Portrait' },
+  { ratio: '16:9', width: 1280, height: 720, label: 'Landscape' },
+  { ratio: '9:16', width: 450, height: 800, label: 'Story' },
 ];
 
 export function SizeSelector() {
