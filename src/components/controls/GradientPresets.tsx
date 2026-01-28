@@ -57,7 +57,13 @@ export function GradientPresets() {
             />
           </span>
           <div className="absolute bottom-1 left-1 right-1">
-            <p className="truncate rounded bg-black/30 px-1.5 py-0.5 text-[10px] font-medium text-white backdrop-blur-sm">
+            <p 
+              className="truncate rounded-lg px-1.5 py-0.5 text-[10px] font-semibold text-foreground backdrop-blur-md"
+              style={{ 
+                background: 'color-mix(in srgb, var(--neu-surface) 85%, transparent)',
+                boxShadow: '0 1px 2px var(--neu-shadow-dark), inset 0 1px 0 var(--neu-shadow-light)'
+              }}
+            >
               {grad.name}
             </p>
           </div>
