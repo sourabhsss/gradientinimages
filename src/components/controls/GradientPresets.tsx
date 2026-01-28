@@ -2,7 +2,6 @@ import { useState, useRef } from 'react';
 import { Heart } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
 import { useCanvasStore } from '@/store/useCanvasStore';
 import { gradientPresets } from '@/data/gradients';
 import type { GradientConfig } from '@/types/canvas';
@@ -116,9 +115,9 @@ export function GradientPresets() {
           {favoriteGradients.length > 0 && (
             <>
               <div className="mb-3">
-                <Badge variant="secondary" className="mb-2">
-                  Favorites
-                </Badge>
+                <div className="neu-raised-sm mb-2 inline-flex items-center rounded-lg px-2.5 py-1">
+                  <span className="text-[10px] font-semibold text-foreground">Favorites</span>
+                </div>
                 <div className="grid grid-cols-2 gap-2">
                   {favoriteGradients.map(renderGradientCard)}
                 </div>
@@ -133,9 +132,9 @@ export function GradientPresets() {
               ref={(el) => { categoryRefs.current[category.id] = el; }}
               className="mb-4"
             >
-              <Badge variant="outline" className="mb-2">
-                {category.label}
-              </Badge>
+              <div className="neu-raised-sm mb-2 inline-flex items-center rounded-lg px-2.5 py-1">
+                <span className="text-[10px] font-semibold text-foreground">{category.label}</span>
+              </div>
               <div className="grid grid-cols-2 gap-2">
                 {gradientPresets
                   .filter((g) => g.category === category.id)

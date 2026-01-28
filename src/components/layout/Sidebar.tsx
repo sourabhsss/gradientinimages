@@ -4,6 +4,7 @@ import { CustomGradientCreator } from '@/components/controls/CustomGradientCreat
 import { SizeSelector } from '@/components/controls/SizeSelector';
 import { FrameControls } from '@/components/controls/FrameControls';
 import { LayersList } from '@/components/layers/LayersList';
+import { Footer } from '@/components/layout/Footer';
 
 export function Sidebar() {
   return (
@@ -17,6 +18,8 @@ export function Sidebar() {
       <FrameControls />
       <Separator className="my-2 opacity-30" />
       <LayersList />
+      <Separator className="my-2 opacity-30" />
+      <Footer />
     </div>
   );
 }
