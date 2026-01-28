@@ -1,3 +1,4 @@
+import { useState, useRef } from 'react';
 import { Heart } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
@@ -8,6 +9,9 @@ import type { GradientConfig } from '@/types/canvas';
 
 export function GradientPresets() {
   const { gradient, setGradient, favoriteGradients, toggleFavorite } = useCanvasStore();
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const categoryRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   
   const categories = [
     { id: 'warm', label: 'Warm' },
@@ -17,6 +21,17 @@ export function GradientPresets() {
     { id: 'dark', label: 'Dark' },
     { id: 'special', label: 'Special' },
   ] as const;
+
+  const scrollToCategory = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    const categoryElement = categoryRefs.current[categoryId];
+    const viewport = scrollAreaRef.current?.querySelector('[data-slot="scroll-area-viewport"]');
+    
+    if (categoryElement && viewport) {
+      const offsetTop = categoryElement.offsetTop - 8; // 8px offset for better visual alignment
+      viewport.scrollTo({ top: offsetTop, behavior: 'smooth' });
+    }
+  };
 
   const renderGradientCard = (grad: GradientConfig) => {
     const isFavorite = favoriteGradients.some((g) => g.id === grad.id);
@@ -79,7 +94,24 @@ export function GradientPresets() {
         <p className="text-xs text-muted-foreground">Select a gradient background</p>
       </div>
 
-      <ScrollArea className="h-[calc(100vh-500px)] scrollbar-hidden">
+      {/* Category Selector */}
+      <div className="mb-3 flex flex-wrap gap-1.5">
+        {categories.map((category) => (
+          <button
+            key={category.id}
+            onClick={() => scrollToCategory(category.id)}
+            className={`neu-button px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
+              selectedCategory === category.id
+                ? 'neu-inset scale-95 text-primary'
+                : 'text-foreground hover:text-primary'
+            }`}
+          >
+            {category.label}
+          </button>
+        ))}
+      </div>
+
+      <ScrollArea ref={scrollAreaRef} className="h-[calc(100vh-550px)] scrollbar-hidden">
         <div className="px-4" style={{ background: 'var(--neu-surface)' }}>
           {favoriteGradients.length > 0 && (
             <>
@@ -96,7 +128,11 @@ export function GradientPresets() {
           )}
 
           {categories.map((category) => (
-            <div key={category.id} className="mb-4">
+            <div 
+              key={category.id} 
+              ref={(el) => { categoryRefs.current[category.id] = el; }}
+              className="mb-4"
+            >
               <Badge variant="outline" className="mb-2">
                 {category.label}
               </Badge>
