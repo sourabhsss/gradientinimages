@@ -73,33 +73,35 @@ export function GradientPresets() {
         <p className="text-xs text-muted-foreground">Select a gradient background</p>
       </div>
 
-      <ScrollArea className="h-[calc(100vh-500px)] pr-4 scrollbar-hidden">
-        {favoriteGradients.length > 0 && (
-          <>
-            <div className="mb-3">
-              <Badge variant="secondary" className="mb-2">
-                Favorites
+      <ScrollArea className="h-[calc(100vh-500px)] scrollbar-hidden">
+        <div className="pr-4" style={{ background: 'var(--neu-surface)' }}>
+          {favoriteGradients.length > 0 && (
+            <>
+              <div className="mb-3">
+                <Badge variant="secondary" className="mb-2">
+                  Favorites
+                </Badge>
+                <div className="grid grid-cols-2 gap-2">
+                  {favoriteGradients.map(renderGradientCard)}
+                </div>
+              </div>
+              <Separator className="my-4" />
+            </>
+          )}
+
+          {categories.map((category) => (
+            <div key={category.id} className="mb-4">
+              <Badge variant="outline" className="mb-2">
+                {category.label}
               </Badge>
               <div className="grid grid-cols-2 gap-2">
-                {favoriteGradients.map(renderGradientCard)}
+                {gradientPresets
+                  .filter((g) => g.category === category.id)
+                  .map(renderGradientCard)}
               </div>
             </div>
-            <Separator className="my-4" />
-          </>
-        )}
-
-        {categories.map((category) => (
-          <div key={category.id} className="mb-4">
-            <Badge variant="outline" className="mb-2">
-              {category.label}
-            </Badge>
-            <div className="grid grid-cols-2 gap-2">
-              {gradientPresets
-                .filter((g) => g.category === category.id)
-                .map(renderGradientCard)}
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </ScrollArea>
     </div>
   );
