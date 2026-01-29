@@ -10,6 +10,8 @@ import { Rulers } from './Rulers';
 import { AlignmentGuides } from './AlignmentGuides';
 import { useCanvasStore } from '@/store/useCanvasStore';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { ShootingStars } from '@/components/ui/shooting-stars';
+import { StarsBackground } from '@/components/ui/stars-background';
 
 interface CanvasAreaProps {
   stageRef: React.RefObject<Konva.Stage | null>;
@@ -236,7 +238,26 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
 
       {images.length === 0 ? (
         <div className="flex h-full items-center justify-center cursor-pointer">
-          <div className="text-center group">
+          {/* Space background effect */}
+          <StarsBackground 
+            starDensity={0.0002} 
+            allStarsTwinkle={true}
+            twinkleProbability={0.8}
+            minTwinkleSpeed={0.4}
+            maxTwinkleSpeed={1.2}
+          />
+          <ShootingStars 
+            minSpeed={15}
+            maxSpeed={35}
+            minDelay={2000}
+            maxDelay={5000}
+            starColor="#a78bfa"
+            trailColor="#6366f1"
+            starWidth={12}
+            starHeight={1}
+          />
+          
+          <div className="text-center group relative z-10">
             <div
               className={`mx-auto flex h-28 w-28 items-center justify-center rounded-full transition-all duration-150 ${
                 isDragActive 
