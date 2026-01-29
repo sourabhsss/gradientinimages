@@ -1,7 +1,7 @@
 import { useRef, useEffect, useCallback, useState } from 'react';
 import { Stage, Layer } from 'react-konva';
 import { useDropzone } from 'react-dropzone';
-import { Upload } from 'lucide-react';
+import { Upload, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
 import type Konva from 'konva';
 import { GradientBackground } from './GradientBackground';
 import { TextureOverlay } from './TextureOverlay';
@@ -9,6 +9,7 @@ import { ImageLayer } from './ImageLayer';
 import { Rulers } from './Rulers';
 import { AlignmentGuides } from './AlignmentGuides';
 import { useCanvasStore } from '@/store/useCanvasStore';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface CanvasAreaProps {
   stageRef: React.RefObject<Konva.Stage | null>;
@@ -123,36 +124,59 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
 
   // Calculate scale to fit canvas in viewport - ensure it stays within visible screen
   const [scale, setScale] = useState(0.55); // Start with reasonable scale
+  const [isManualZoom, setIsManualZoom] = useState(false); // Track if user manually adjusted zoom
+
+  // Zoom constraints
+  const MIN_ZOOM = 0.1;
+  const MAX_ZOOM = 2.0;
+  const ZOOM_STEP = 0.1;
+
+  const calculateFitScale = useCallback(() => {
+    if (!containerRef.current) return 0.55;
+    const container = containerRef.current;
+    
+    const containerWidth = container.clientWidth;
+    const containerHeight = container.clientHeight;
+    
+    if (containerWidth === 0 || containerHeight === 0) return 0.55;
+    
+    const targetWidthPercent = 0.72;
+    const targetHeightPercent = 0.62;
+    
+    const maxAllowedWidth = containerWidth * targetWidthPercent;
+    const maxAllowedHeight = containerHeight * targetHeightPercent;
+    
+    const scaleX = maxAllowedWidth / canvasSize.width;
+    const scaleY = maxAllowedHeight / canvasSize.height;
+    
+    return Math.max(Math.min(scaleX, scaleY, 1.0), MIN_ZOOM);
+  }, [canvasSize.width, canvasSize.height]);
+
+  // Zoom handlers
+  const handleZoomIn = useCallback(() => {
+    setIsManualZoom(true);
+    setScale(prev => Math.min(prev + ZOOM_STEP, MAX_ZOOM));
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    setIsManualZoom(true);
+    setScale(prev => Math.max(prev - ZOOM_STEP, MIN_ZOOM));
+  }, []);
+
+  const handleFitToScreen = useCallback(() => {
+    setIsManualZoom(false);
+    const fitScale = calculateFitScale();
+    setScale(fitScale);
+  }, [calculateFitScale]);
 
   useEffect(() => {
     const updateScale = () => {
-      if (!containerRef.current) return;
-      const container = containerRef.current;
+      const fitScale = calculateFitScale();
       
-      // Get actual container dimensions
-      const containerWidth = container.clientWidth;
-      const containerHeight = container.clientHeight;
-      
-      // Skip if container hasn't been measured yet
-      if (containerWidth === 0 || containerHeight === 0) return;
-      
-      // Target: canvas should fit within a percentage of container dimensions
-      // This ensures sufficient margins on all sides including shadows
-      const targetWidthPercent = 0.72;
-      const targetHeightPercent = 0.62; // Balanced for height to fit with margins
-      
-      const maxAllowedWidth = containerWidth * targetWidthPercent;
-      const maxAllowedHeight = containerHeight * targetHeightPercent;
-      
-      // Calculate scale to fit canvas within target area
-      const scaleX = maxAllowedWidth / canvasSize.width;
-      const scaleY = maxAllowedHeight / canvasSize.height;
-      
-      // Use the smaller scale to ensure canvas fits in both dimensions
-      // Cap at 1.0 to never scale up
-      const newScale = Math.min(scaleX, scaleY, 1.0);
-      
-      setScale(Math.max(newScale, 0.1)); // Minimum scale of 0.1
+      // Only auto-update scale if not manually zoomed
+      if (!isManualZoom) {
+        setScale(fitScale);
+      }
     };
 
     // Run immediately and also on resize
@@ -166,7 +190,12 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
       clearTimeout(timeoutId);
       window.removeEventListener('resize', updateScale);
     };
-  }, [canvasSize.width, canvasSize.height, images.length]);
+  }, [canvasSize.width, canvasSize.height, images.length, isManualZoom, calculateFitScale]);
+
+  // Reset manual zoom when canvas size changes
+  useEffect(() => {
+    setIsManualZoom(false);
+  }, [canvasSize.width, canvasSize.height]);
 
   // Check if selected image is centered (when not dragging)
   useEffect(() => {
@@ -236,6 +265,55 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
               </div>
             </div>
           )}
+
+          {/* Zoom Controls */}
+          <div className="absolute bottom-6 right-6 z-20 flex items-center gap-2 rounded-xl neu-raised-sm p-1.5">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className="neu-button flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50 disabled:pointer-events-none"
+                  onClick={handleZoomOut}
+                  disabled={scale <= MIN_ZOOM}
+                >
+                  <ZoomOut className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top">Zoom Out</TooltipContent>
+            </Tooltip>
+            
+            <div className="neu-inset flex h-7 min-w-[3.5rem] items-center justify-center rounded-md px-2">
+              <span className="text-xs font-medium text-muted-foreground">
+                {Math.round(scale * 100)}%
+              </span>
+            </div>
+            
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className="neu-button flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50 disabled:pointer-events-none"
+                  onClick={handleZoomIn}
+                  disabled={scale >= MAX_ZOOM}
+                >
+                  <ZoomIn className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top">Zoom In</TooltipContent>
+            </Tooltip>
+            
+            <div className="mx-0.5 h-5 w-px bg-border/50" />
+            
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className="neu-button flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground"
+                  onClick={handleFitToScreen}
+                >
+                  <Maximize2 className="h-4 w-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top">Fit to Screen</TooltipContent>
+            </Tooltip>
+          </div>
           
           <div
             className="neu-raised-lg overflow-hidden"

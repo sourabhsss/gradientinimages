@@ -1,5 +1,4 @@
 import { Download } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,16 +26,22 @@ export function Header({ onExport }: HeaderProps) {
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button className="gap-2">
+            <button className="neu-button flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium text-primary transition-colors hover:text-primary/80">
               <Download className="h-4 w-4" />
               Export
-            </Button>
+            </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => onExport(1)}>
+          <DropdownMenuContent align="end" className="neu-raised-sm rounded-xl border-0 p-1">
+            <DropdownMenuItem 
+              onClick={() => onExport(1)}
+              className="rounded-lg px-3 py-2 text-sm cursor-pointer hover:bg-primary/10 focus:bg-primary/10"
+            >
               Export 1x (Standard)
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onExport(2)}>
+            <DropdownMenuItem 
+              onClick={() => onExport(2)}
+              className="rounded-lg px-3 py-2 text-sm cursor-pointer hover:bg-primary/10 focus:bg-primary/10"
+            >
               Export 2x (High Quality)
             </DropdownMenuItem>
           </DropdownMenuContent>

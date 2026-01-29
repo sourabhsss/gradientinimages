@@ -6,6 +6,7 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { CanvasArea } from '@/components/canvas/CanvasArea';
 import { useCanvasStore } from '@/store/useCanvasStore';
 import { exportCanvas, generateFilename } from '@/utils/export';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 export default function App() {
   const stageRef = useRef<Konva.Stage | null>(null);
@@ -27,12 +28,14 @@ export default function App() {
   };
 
   return (
-    <div className="h-screen overflow-hidden bg-background">
-      <Header onExport={handleExport} />
-      <MainLayout
-        sidebar={<Sidebar />}
-        canvas={<CanvasArea stageRef={stageRef} />}
-      />
-    </div>
+    <TooltipProvider>
+      <div className="h-screen overflow-hidden bg-background">
+        <Header onExport={handleExport} />
+        <MainLayout
+          sidebar={<Sidebar />}
+          canvas={<CanvasArea stageRef={stageRef} />}
+        />
+      </div>
+    </TooltipProvider>
   );
 }
