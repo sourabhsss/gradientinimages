@@ -122,48 +122,51 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
   });
 
   // Calculate scale to fit canvas in viewport - ensure it stays within visible screen
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(0.55); // Start with reasonable scale
 
   useEffect(() => {
     const updateScale = () => {
       if (!containerRef.current) return;
       const container = containerRef.current;
       
-      // Account for the padding already applied to the container
-      // px-8 = 32px on each side (64px total horizontal)
-      // py-12 = 48px on each side (96px total vertical)
-      const horizontalPadding = 64;
-      const verticalPadding = 96;
+      // Get actual container dimensions
+      const containerWidth = container.clientWidth;
+      const containerHeight = container.clientHeight;
       
-      // Additional safety margin to ensure rulers and edges are always visible
-      // Increase margins significantly for portrait orientations (height > width)
-      const isPortrait = canvasSize.height > canvasSize.width;
-      const aspectRatio = canvasSize.height / canvasSize.width;
+      // Skip if container hasn't been measured yet
+      if (containerWidth === 0 || containerHeight === 0) return;
       
-      // More aggressive margins for very tall canvases (9:16 and similar)
-      const isVeryTall = aspectRatio > 1.5;
+      // Target: canvas should fit within a percentage of container dimensions
+      // This ensures sufficient margins on all sides including shadows
+      const targetWidthPercent = 0.72;
+      const targetHeightPercent = 0.62; // Balanced for height to fit with margins
       
-      const horizontalMargin = 80; // More space for rulers
-      const verticalMargin = isVeryTall ? 140 : (isPortrait ? 120 : 100);
+      const maxAllowedWidth = containerWidth * targetWidthPercent;
+      const maxAllowedHeight = containerHeight * targetHeightPercent;
       
-      const availableWidth = container.clientWidth - horizontalPadding - horizontalMargin;
-      const availableHeight = container.clientHeight - verticalPadding - verticalMargin;
+      // Calculate scale to fit canvas within target area
+      const scaleX = maxAllowedWidth / canvasSize.width;
+      const scaleY = maxAllowedHeight / canvasSize.height;
       
-      const scaleX = availableWidth / canvasSize.width;
-      const scaleY = availableHeight / canvasSize.height;
+      // Use the smaller scale to ensure canvas fits in both dimensions
+      // Cap at 1.0 to never scale up
+      const newScale = Math.min(scaleX, scaleY, 1.0);
       
-      // Scale to fit comfortably with visible rulers
-      // Even lower cap for very tall canvases
-      const maxScale = isVeryTall ? 0.7 : (isPortrait ? 0.75 : 0.85);
-      const newScale = Math.min(scaleX, scaleY, maxScale);
-      
-      setScale(newScale);
+      setScale(Math.max(newScale, 0.1)); // Minimum scale of 0.1
     };
 
+    // Run immediately and also on resize
     updateScale();
+    
+    // Also run after a short delay to handle layout settling
+    const timeoutId = setTimeout(updateScale, 100);
+    
     window.addEventListener('resize', updateScale);
-    return () => window.removeEventListener('resize', updateScale);
-  }, [canvasSize]);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', updateScale);
+    };
+  }, [canvasSize.width, canvasSize.height, images.length]);
 
   // Check if selected image is centered (when not dragging)
   useEffect(() => {
@@ -198,7 +201,7 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
     <div
       ref={containerRef}
       {...getRootProps()}
-      className="relative h-full w-full overflow-hidden px-8 py-12"
+      className="relative h-full w-full overflow-hidden px-12 py-16"
     >
       <input {...getInputProps()} />
 
