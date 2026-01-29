@@ -36,8 +36,8 @@ export function Header({ onExport }: HeaderProps) {
             <span className="text-xl font-bold text-white">G</span>
           </div>
           <div>
-            <h1 className="text-lg font-semibold">Gradient Backgrounds</h1>
-            <p className="text-xs text-muted-foreground">Create beautiful image backgrounds</p>
+            <h1 className="text-lg font-semibold">Add Gradient Background To Images</h1>
+            <p className="text-xs text-muted-foreground">100% local • Your images never leave your device</p>
           </div>
         </div>
         
