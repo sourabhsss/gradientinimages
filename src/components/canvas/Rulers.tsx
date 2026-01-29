@@ -1,9 +1,12 @@
 import { Line, Text, Rect } from 'react-konva';
 import { useCanvasStore } from '@/store/useCanvasStore';
 
+// Export ruler size constant for use in alignment calculations
+export const RULER_SIZE = 20;
+
 export function Rulers() {
   const { canvasSize } = useCanvasStore();
-  const rulerSize = 20; // Size of ruler track
+  const rulerSize = RULER_SIZE; // Size of ruler track
   const majorTickSize = 10;
   const minorTickSize = 5;
   const tickInterval = 50; // Major tick every 50px

@@ -6,7 +6,7 @@ import type Konva from 'konva';
 import { GradientBackground } from './GradientBackground';
 import { TextureOverlay } from './TextureOverlay';
 import { ImageLayer } from './ImageLayer';
-import { Rulers } from './Rulers';
+import { Rulers, RULER_SIZE } from './Rulers';
 import { AlignmentGuides } from './AlignmentGuides';
 import { useCanvasStore } from '@/store/useCanvasStore';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -43,13 +43,14 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
     const imageCenterX = posX + imageWidth / 2;
     const imageCenterY = posY + imageHeight / 2;
     
-    // Canvas center
-    const canvasCenterX = canvasSize.width / 2;
-    const canvasCenterY = canvasSize.height / 2;
+    // Content area center (excluding rulers)
+    // Content area starts at RULER_SIZE and extends to canvasSize
+    const contentCenterX = RULER_SIZE + (canvasSize.width - RULER_SIZE) / 2;
+    const contentCenterY = RULER_SIZE + (canvasSize.height - RULER_SIZE) / 2;
     
     // Check alignment
-    const isHorizontallyCentered = Math.abs(imageCenterX - canvasCenterX) < threshold;
-    const isVerticallyCentered = Math.abs(imageCenterY - canvasCenterY) < threshold;
+    const isHorizontallyCentered = Math.abs(imageCenterX - contentCenterX) < threshold;
+    const isVerticallyCentered = Math.abs(imageCenterY - contentCenterY) < threshold;
     
     // Show vertical line when image is horizontally centered (horizontal centers coincide)
     // Show horizontal line when image is vertically centered (vertical centers coincide)
@@ -89,9 +90,10 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
             const width = img.width * scale;
             const height = img.height * scale;
 
-            // Center the image perfectly in the canvas
-            const x = (canvasSize.width - width) / 2;
-            const y = (canvasSize.height - height) / 2;
+            // Center the image in the content area (excluding rulers)
+            // Content area starts at RULER_SIZE
+            const x = RULER_SIZE + (canvasSize.width - RULER_SIZE - width) / 2;
+            const y = RULER_SIZE + (canvasSize.height - RULER_SIZE - height) / 2;
 
             addImage({
               src: reader.result as string,
