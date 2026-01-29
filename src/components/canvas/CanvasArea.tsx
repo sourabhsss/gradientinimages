@@ -235,14 +235,16 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
       <input {...getInputProps()} />
 
       {images.length === 0 ? (
-        <div className="flex h-full items-center justify-center">
-          <div className="text-center">
+        <div className="flex h-full items-center justify-center cursor-pointer">
+          <div className="text-center group">
             <div
-              className={`mx-auto flex h-28 w-28 items-center justify-center rounded-full transition-all ${
-                isDragActive ? 'neu-inset-deep scale-95' : 'neu-raised-lg'
+              className={`mx-auto flex h-28 w-28 items-center justify-center rounded-full transition-all duration-150 ${
+                isDragActive 
+                  ? 'neu-inset-deep scale-95' 
+                  : 'neu-raised-lg hover:scale-105 active:neu-inset-deep active:scale-95'
               }`}
             >
-              <Upload className={`h-12 w-12 transition-colors ${isDragActive ? 'text-primary' : 'text-muted-foreground'}`} />
+              <Upload className={`h-12 w-12 transition-colors ${isDragActive ? 'text-primary' : 'text-muted-foreground group-hover:text-primary'}`} />
             </div>
             <h3 className="mt-6 text-xl font-semibold">
               {isDragActive ? 'Drop images here' : 'Upload Images'}
