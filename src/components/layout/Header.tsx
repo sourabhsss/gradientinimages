@@ -42,17 +42,19 @@ export function Header({ onExport }: HeaderProps) {
         </div>
         
         <div className="flex items-center gap-3">
-          <span className="text-xs font-medium text-muted-foreground">
-            Built with ❤️{' '}
-            <a
-              href="https://kombai.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold text-primary transition-colors hover:text-primary/80"
-            >
-              Kombai
-            </a>
-          </span>
+          <div className="neu-raised-sm flex items-center gap-2 rounded-xl px-4 py-2">
+            <span className="text-xs font-medium text-muted-foreground">
+              Built with ❤️{' '}
+              <a
+                href="https://kombai.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-primary transition-colors hover:text-primary/80"
+              >
+                Kombai
+              </a>
+            </span>
+          </div>
 
           <Tooltip>
             <TooltipTrigger asChild>
