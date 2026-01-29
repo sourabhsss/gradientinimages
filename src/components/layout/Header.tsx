@@ -1,11 +1,23 @@
-import { Download, Moon, Sun } from 'lucide-react';
+import { Download, Moon, Sun, RotateCcw } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { useThemeStore } from '@/store/useThemeStore';
+import { useCanvasStore } from '@/store/useCanvasStore';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface HeaderProps {
@@ -14,6 +26,7 @@ interface HeaderProps {
 
 export function Header({ onExport }: HeaderProps) {
   const { isDark, toggleTheme } = useThemeStore();
+  const resetCanvas = useCanvasStore((state) => state.resetCanvas);
 
   return (
     <header className="neu-raised px-6 py-4">
@@ -29,6 +42,38 @@ export function Header({ onExport }: HeaderProps) {
         </div>
         
         <div className="flex items-center gap-3">
+          <AlertDialog>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <AlertDialogTrigger asChild>
+                  <button
+                    className="neu-button flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:text-destructive"
+                  >
+                    <RotateCcw className="h-5 w-5" />
+                  </button>
+                </AlertDialogTrigger>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">Reset Canvas</TooltipContent>
+            </Tooltip>
+            <AlertDialogContent className="neu-raised rounded-2xl border-0">
+              <AlertDialogHeader>
+                <AlertDialogTitle>Reset Canvas?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will reset everything to the initial state. All your images, gradient settings, and customizations will be removed. This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="neu-button rounded-xl border-0">Cancel</AlertDialogCancel>
+                <AlertDialogAction 
+                  onClick={resetCanvas}
+                  className="neu-button rounded-xl border-0 bg-destructive text-white hover:bg-destructive/90"
+                >
+                  Reset Everything
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
           <Tooltip>
             <TooltipTrigger asChild>
               <button

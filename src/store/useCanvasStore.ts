@@ -39,6 +39,7 @@ interface CanvasState {
   setFrameShadow: (shadow: number) => void;
   toggleFavorite: (gradient: GradientConfig) => void;
   loadFavorites: () => void;
+  resetCanvas: () => void;
 }
 
 const DEFAULT_GRADIENT: GradientConfig = {
@@ -220,5 +221,19 @@ export const useCanvasStore = create<CanvasState>((set, get) => ({
     } catch (error) {
       console.error('Failed to load favorites:', error);
     }
+  },
+
+  resetCanvas: () => {
+    set({
+      canvasSize: { width: 800, height: 800, ratio: '1:1' },
+      scale: 1,
+      gradient: DEFAULT_GRADIENT,
+      texture: DEFAULT_TEXTURE,
+      images: [],
+      selectedImageId: null,
+      framePadding: 0,
+      frameRadius: 12,
+      frameShadow: 30,
+    });
   },
 }));
