@@ -36,18 +36,18 @@ export function TextureSelector() {
   };
 
   return (
-    <div className="space-y-4 p-4">
+    <div className="space-y-3 md:space-y-4 p-3 md:p-4">
       <div className="flex items-center gap-2">
-        <div className="neu-raised-sm flex h-8 w-8 items-center justify-center rounded-lg">
-          <Sparkles className="h-4 w-4 text-primary" />
+        <div className="neu-raised-sm flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-lg">
+          <Sparkles className="h-3.5 w-3.5 md:h-4 md:w-4 text-primary" />
         </div>
-        <h2 className="text-base font-semibold">Texture Overlay</h2>
+        <h2 className="text-sm md:text-base font-semibold">Texture Overlay</h2>
       </div>
 
       {/* Texture Presets */}
       <div className="space-y-2">
-        <Label className="text-xs">Texture Type</Label>
-        <div className="grid grid-cols-2 gap-2">
+        <Label className="text-[10px] md:text-xs">Texture Type</Label>
+        <div className="grid grid-cols-2 gap-1.5 md:gap-2">
           {texturePresets.map((preset) => {
             const isSelected = texture.id === preset.id;
             const previewStyle = renderTexturePreview(preset.type);
@@ -56,7 +56,7 @@ export function TextureSelector() {
               <button
                 key={preset.id}
                 onClick={() => setTexture(preset)}
-                className={`group relative h-16 w-full rounded-xl transition-all p-1.5 ${
+                className={`group relative h-14 md:h-16 w-full rounded-xl transition-all p-1.5 ${
                   isSelected ? 'neu-inset scale-95' : 'neu-raised-sm hover:neu-raised'
                 }`}
               >
@@ -90,8 +90,8 @@ export function TextureSelector() {
       {texture.type !== 'none' && (
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <Label className="text-xs">Opacity</Label>
-            <span className="text-xs text-muted-foreground">
+            <Label className="text-[10px] md:text-xs">Opacity</Label>
+            <span className="text-[10px] md:text-xs text-muted-foreground">
               {Math.round(texture.opacity * 100)}%
             </span>
           </div>

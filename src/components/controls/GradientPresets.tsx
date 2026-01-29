@@ -40,7 +40,7 @@ export function GradientPresets() {
       <button
         key={grad.id}
         onClick={() => setGradient(grad)}
-        className={`group relative h-16 w-full rounded-xl transition-all p-1.5 ${
+        className={`group relative h-14 md:h-16 w-full rounded-xl transition-all p-1.5 ${
           isSelected ? 'neu-inset scale-95' : 'neu-raised-sm hover:neu-raised'
         }`}
       >
@@ -87,19 +87,19 @@ export function GradientPresets() {
   };
 
   return (
-    <div className="p-4">
-      <div className="mb-4">
-        <h2 className="text-base font-semibold">Gradient Presets</h2>
-        <p className="text-xs text-muted-foreground">Select a gradient background</p>
+    <div className="p-3 md:p-4">
+      <div className="mb-3 md:mb-4">
+        <h2 className="text-sm md:text-base font-semibold">Gradient Presets</h2>
+        <p className="text-[10px] md:text-xs text-muted-foreground">Select a gradient background</p>
       </div>
 
       {/* Category Selector */}
-      <div className="mb-3 flex flex-wrap gap-1.5">
+      <div className="mb-3 flex flex-wrap gap-1 md:gap-1.5">
         {categories.map((category) => (
           <button
             key={category.id}
             onClick={() => scrollToCategory(category.id)}
-            className={`neu-button px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
+            className={`neu-button px-2 md:px-2.5 py-1 rounded-lg text-[10px] font-medium transition-all ${
               selectedCategory === category.id
                 ? 'neu-inset scale-95 text-primary'
                 : 'text-foreground hover:text-primary'
@@ -110,7 +110,7 @@ export function GradientPresets() {
         ))}
       </div>
 
-      <ScrollArea ref={scrollAreaRef} className="h-[calc(100vh-550px)] scrollbar-hidden">
+      <ScrollArea ref={scrollAreaRef} className="h-[200px] md:h-[calc(100vh-550px)] scrollbar-hidden">
         <div className="px-4" style={{ background: 'var(--neu-surface)' }}>
           {favoriteGradients.length > 0 && (
             <>

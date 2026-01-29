@@ -32,22 +32,22 @@ export function FrameControls() {
   };
 
   return (
-    <div className="space-y-4 p-4">
+    <div className="space-y-3 md:space-y-4 p-3 md:p-4">
       <div>
-        <h2 className="text-base font-semibold">Frame Styling</h2>
-        <p className="text-xs text-muted-foreground">
+        <h2 className="text-sm md:text-base font-semibold">Frame Styling</h2>
+        <p className="text-[10px] md:text-xs text-muted-foreground">
           {isDisabled ? 'Select an image to adjust' : 'Adjust selected image'}
         </p>
       </div>
 
-      <div className="space-y-4">
-        <div className="neu-card space-y-2 p-3 rounded-xl">
+      <div className="space-y-3 md:space-y-4">
+        <div className="neu-card space-y-2 p-2.5 md:p-3 rounded-xl">
           <div className="flex items-center justify-between">
-            <Label className="text-xs font-medium flex items-center gap-1">
+            <Label className="text-[10px] md:text-xs font-medium flex items-center gap-1">
               <ZoomIn className="h-3 w-3" />
               Image Zoom
             </Label>
-            <span className="neu-raised-sm text-xs font-semibold px-2 py-0.5 rounded-lg">{currentZoom}%</span>
+            <span className="neu-raised-sm text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 rounded-lg">{currentZoom}%</span>
           </div>
           <div className="neu-inset rounded-full p-1">
             <Slider
@@ -60,15 +60,15 @@ export function FrameControls() {
               className="w-full"
             />
           </div>
-          <p className="text-[10px] text-muted-foreground">
+          <p className="text-[9px] md:text-[10px] text-muted-foreground">
             Tip: Drag corner handles to resize
           </p>
         </div>
 
-        <div className="neu-card space-y-2 p-3 rounded-xl">
+        <div className="neu-card space-y-2 p-2.5 md:p-3 rounded-xl">
           <div className="flex items-center justify-between">
-            <Label className="text-xs font-medium">Padding</Label>
-            <span className="neu-raised-sm text-xs font-semibold px-2 py-0.5 rounded-lg">{framePadding}px</span>
+            <Label className="text-[10px] md:text-xs font-medium">Padding</Label>
+            <span className="neu-raised-sm text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 rounded-lg">{framePadding}px</span>
           </div>
           <div className="neu-inset rounded-full p-1">
             <Slider
@@ -83,10 +83,10 @@ export function FrameControls() {
           </div>
         </div>
 
-        <div className="neu-card space-y-2 p-3 rounded-xl">
+        <div className="neu-card space-y-2 p-2.5 md:p-3 rounded-xl">
           <div className="flex items-center justify-between">
-            <Label className="text-xs font-medium">Corner Radius</Label>
-            <span className="neu-raised-sm text-xs font-semibold px-2 py-0.5 rounded-lg">{frameRadius}px</span>
+            <Label className="text-[10px] md:text-xs font-medium">Corner Radius</Label>
+            <span className="neu-raised-sm text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 rounded-lg">{frameRadius}px</span>
           </div>
           <div className="neu-inset rounded-full p-1">
             <Slider
@@ -101,10 +101,10 @@ export function FrameControls() {
           </div>
         </div>
 
-        <div className="neu-card space-y-2 p-3 rounded-xl">
+        <div className="neu-card space-y-2 p-2.5 md:p-3 rounded-xl">
           <div className="flex items-center justify-between">
-            <Label className="text-xs font-medium">Shadow Intensity</Label>
-            <span className="neu-raised-sm text-xs font-semibold px-2 py-0.5 rounded-lg">{frameShadow}%</span>
+            <Label className="text-[10px] md:text-xs font-medium">Shadow Intensity</Label>
+            <span className="neu-raised-sm text-[10px] md:text-xs font-semibold px-1.5 md:px-2 py-0.5 rounded-lg">{frameShadow}%</span>
           </div>
           <div className="neu-inset rounded-full p-1">
             <Slider

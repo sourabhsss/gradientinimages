@@ -29,22 +29,29 @@ export function Header({ onExport }: HeaderProps) {
   const resetCanvas = useCanvasStore((state) => state.resetCanvas);
 
   return (
-    <header className="neu-raised px-6 py-4">
+    <header className="neu-raised px-3 py-2 md:px-6 md:py-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="neu-raised-sm flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/60">
-            <span className="text-xl font-bold text-white">G</span>
+        {/* Logo and Title */}
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="neu-raised-sm flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-lg md:rounded-xl bg-gradient-to-br from-primary to-primary/60">
+            <span className="text-base md:text-xl font-bold text-white">G</span>
           </div>
-          <div>
-            <h1 className="text-lg font-semibold">Add Gradient Background To Images</h1>
-            <p className="text-xs text-muted-foreground">100% local • Your images never leave your device</p>
+          <div className="hidden sm:block">
+            <h1 className="text-sm md:text-lg font-semibold leading-tight">Add Gradient Background To Images</h1>
+            <p className="text-[10px] md:text-xs text-muted-foreground">100% local • Your images never leave your device</p>
+          </div>
+          {/* Mobile Title - Short version */}
+          <div className="sm:hidden">
+            <h1 className="text-sm font-semibold">Gradient BG</h1>
           </div>
         </div>
         
-        <div className="flex items-center gap-3">
-          <div className="neu-raised-sm flex items-center gap-2 rounded-xl px-4 py-2">
-            <span className="text-xs font-medium text-muted-foreground">
-              Built with ❤️{' '}
+        {/* Actions */}
+        <div className="flex items-center gap-1.5 md:gap-3">
+          {/* Built with Kombai */}
+          <div className="neu-raised-sm flex items-center gap-2 rounded-lg md:rounded-xl px-2 md:px-4 py-1.5 md:py-2">
+            <span className="text-[10px] md:text-xs font-medium text-muted-foreground">
+              <span className="hidden xs:inline">Built with </span>❤️{' '}
               <a
                 href="https://kombai.com"
                 target="_blank"
@@ -56,41 +63,43 @@ export function Header({ onExport }: HeaderProps) {
             </span>
           </div>
 
+          {/* GitHub - hidden on smallest screens */}
           <Tooltip>
             <TooltipTrigger asChild>
               <a
                 href="https://github.com/sourabhsss/gradientinimages"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="neu-button flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:text-foreground"
+                className="neu-button hidden xs:flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-lg md:rounded-xl text-muted-foreground transition-colors hover:text-foreground"
               >
-                <Github className="h-5 w-5" />
+                <Github className="h-4 w-4 md:h-5 md:w-5" />
               </a>
             </TooltipTrigger>
             <TooltipContent side="bottom">View on GitHub</TooltipContent>
           </Tooltip>
 
+          {/* Reset Canvas */}
           <AlertDialog>
             <Tooltip>
               <TooltipTrigger asChild>
                 <AlertDialogTrigger asChild>
                   <button
-                    className="neu-button flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:text-destructive"
+                    className="neu-button flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-lg md:rounded-xl text-muted-foreground transition-colors hover:text-destructive"
                   >
-                    <RotateCcw className="h-5 w-5" />
+                    <RotateCcw className="h-4 w-4 md:h-5 md:w-5" />
                   </button>
                 </AlertDialogTrigger>
               </TooltipTrigger>
               <TooltipContent side="bottom">Reset Canvas</TooltipContent>
             </Tooltip>
-            <AlertDialogContent className="neu-raised rounded-2xl border-0">
+            <AlertDialogContent className="neu-raised rounded-2xl border-0 mx-4 max-w-[calc(100vw-2rem)] sm:max-w-lg">
               <AlertDialogHeader>
                 <AlertDialogTitle>Reset Canvas?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This will reset everything to the initial state. All your images, gradient settings, and customizations will be removed. This action cannot be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
-              <AlertDialogFooter>
+              <AlertDialogFooter className="flex-col sm:flex-row gap-2">
                 <AlertDialogCancel className="neu-button rounded-xl border-0">Cancel</AlertDialogCancel>
                 <AlertDialogAction 
                   onClick={resetCanvas}
@@ -102,13 +111,14 @@ export function Header({ onExport }: HeaderProps) {
             </AlertDialogContent>
           </AlertDialog>
 
+          {/* Theme Toggle */}
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 onClick={toggleTheme}
-                className="neu-button flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:text-foreground"
+                className="neu-button flex h-8 w-8 md:h-10 md:w-10 items-center justify-center rounded-lg md:rounded-xl text-muted-foreground transition-colors hover:text-foreground"
               >
-                {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+                {isDark ? <Sun className="h-4 w-4 md:h-5 md:w-5" /> : <Moon className="h-4 w-4 md:h-5 md:w-5" />}
               </button>
             </TooltipTrigger>
             <TooltipContent side="bottom">
@@ -116,11 +126,12 @@ export function Header({ onExport }: HeaderProps) {
             </TooltipContent>
           </Tooltip>
 
+          {/* Export Button */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="neu-button flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-medium text-primary transition-colors hover:text-primary/80">
-                <Download className="h-4 w-4" />
-                Export
+              <button className="neu-button flex items-center gap-1 md:gap-2 rounded-lg md:rounded-xl px-3 md:px-5 py-1.5 md:py-2.5 text-xs md:text-sm font-medium text-primary transition-colors hover:text-primary/80">
+                <Download className="h-3.5 w-3.5 md:h-4 md:w-4" />
+                <span className="hidden xs:inline">Export</span>
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="neu-raised-sm rounded-xl border-0 p-1">

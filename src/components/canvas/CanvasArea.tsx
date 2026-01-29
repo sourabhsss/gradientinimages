@@ -144,8 +144,10 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
     
     if (containerWidth === 0 || containerHeight === 0) return 0.55;
     
-    const targetWidthPercent = 0.72;
-    const targetHeightPercent = 0.62;
+    // Adjust target percentages based on screen size
+    const isMobile = containerWidth < 640;
+    const targetWidthPercent = isMobile ? 0.9 : 0.72;
+    const targetHeightPercent = isMobile ? 0.75 : 0.62;
     
     const maxAllowedWidth = containerWidth * targetWidthPercent;
     const maxAllowedHeight = containerHeight * targetHeightPercent;
@@ -234,7 +236,7 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
     <div
       ref={containerRef}
       {...getRootProps()}
-      className="relative h-full w-full overflow-hidden px-12 py-16"
+      className="relative h-full w-full overflow-hidden px-4 py-8 md:px-12 md:py-16"
     >
       <input {...getInputProps()} />
 
@@ -259,23 +261,23 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
             starHeight={1}
           />
           
-          <div className="text-center group relative z-10">
+          <div className="text-center group relative z-10 px-4">
             <div
-              className={`mx-auto flex h-28 w-28 items-center justify-center rounded-full transition-all duration-150 ${
+              className={`mx-auto flex h-20 w-20 md:h-28 md:w-28 items-center justify-center rounded-full transition-all duration-150 ${
                 isDragActive 
                   ? 'neu-inset-deep scale-95' 
                   : 'neu-raised-lg hover:scale-105 active:neu-inset-deep active:scale-95'
               }`}
             >
-              <Upload className={`h-12 w-12 transition-colors ${isDragActive ? 'text-primary' : 'text-muted-foreground group-hover:text-primary'}`} />
+              <Upload className={`h-8 w-8 md:h-12 md:w-12 transition-colors ${isDragActive ? 'text-primary' : 'text-muted-foreground group-hover:text-primary'}`} />
             </div>
-            <h3 className="mt-6 text-xl font-semibold">
+            <h3 className="mt-4 md:mt-6 text-lg md:text-xl font-semibold">
               {isDragActive ? 'Drop images here' : 'Upload Images'}
             </h3>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p className="mt-2 text-xs md:text-sm text-muted-foreground">
               Drag and drop images or click to browse
             </p>
-            <p className="mt-1 text-xs text-muted-foreground">
+            <p className="mt-1 text-[10px] md:text-xs text-muted-foreground">
               Supports PNG, JPG, GIF, WebP
             </p>
           </div>
@@ -284,30 +286,30 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
         <div className="flex h-full items-center justify-center">
           {isDragActive && (
             <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-primary/10 backdrop-blur-sm">
-              <div className="neu-raised-lg rounded-2xl p-8">
-                <Upload className="mx-auto h-12 w-12 text-primary" />
-                <p className="mt-3 text-lg font-semibold">Drop to add images</p>
+              <div className="neu-raised-lg rounded-2xl p-6 md:p-8">
+                <Upload className="mx-auto h-8 w-8 md:h-12 md:w-12 text-primary" />
+                <p className="mt-2 md:mt-3 text-base md:text-lg font-semibold">Drop to add images</p>
               </div>
             </div>
           )}
 
           {/* Zoom Controls */}
-          <div className="absolute bottom-6 right-6 z-20 flex items-center gap-2 rounded-xl neu-raised-sm p-1.5">
+          <div className="absolute bottom-4 right-4 md:bottom-6 md:right-6 z-20 flex items-center gap-1.5 md:gap-2 rounded-lg md:rounded-xl neu-raised-sm p-1 md:p-1.5">
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  className="neu-button flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50 disabled:pointer-events-none"
+                  className="neu-button flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-md md:rounded-lg text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50 disabled:pointer-events-none"
                   onClick={handleZoomOut}
                   disabled={scale <= MIN_ZOOM}
                 >
-                  <ZoomOut className="h-4 w-4" />
+                  <ZoomOut className="h-3.5 w-3.5 md:h-4 md:w-4" />
                 </button>
               </TooltipTrigger>
               <TooltipContent side="top">Zoom Out</TooltipContent>
             </Tooltip>
             
-            <div className="neu-inset flex h-7 min-w-[3.5rem] items-center justify-center rounded-md px-2">
-              <span className="text-xs font-medium text-muted-foreground">
+            <div className="neu-inset flex h-6 md:h-7 min-w-[2.5rem] md:min-w-[3.5rem] items-center justify-center rounded-md px-1.5 md:px-2">
+              <span className="text-[10px] md:text-xs font-medium text-muted-foreground">
                 {Math.round(scale * 100)}%
               </span>
             </div>
@@ -315,25 +317,25 @@ export function CanvasArea({ stageRef }: CanvasAreaProps) {
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  className="neu-button flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50 disabled:pointer-events-none"
+                  className="neu-button flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-md md:rounded-lg text-muted-foreground transition-colors hover:text-foreground disabled:opacity-50 disabled:pointer-events-none"
                   onClick={handleZoomIn}
                   disabled={scale >= MAX_ZOOM}
                 >
-                  <ZoomIn className="h-4 w-4" />
+                  <ZoomIn className="h-3.5 w-3.5 md:h-4 md:w-4" />
                 </button>
               </TooltipTrigger>
               <TooltipContent side="top">Zoom In</TooltipContent>
             </Tooltip>
             
-            <div className="mx-0.5 h-5 w-px bg-border/50" />
+            <div className="mx-0.5 h-4 md:h-5 w-px bg-border/50" />
             
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
-                  className="neu-button flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground"
+                  className="neu-button flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-md md:rounded-lg text-muted-foreground transition-colors hover:text-foreground"
                   onClick={handleFitToScreen}
                 >
-                  <Maximize2 className="h-4 w-4" />
+                  <Maximize2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
                 </button>
               </TooltipTrigger>
               <TooltipContent side="top">Fit to Screen</TooltipContent>

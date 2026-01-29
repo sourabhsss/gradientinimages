@@ -31,23 +31,23 @@ export function SizeSelector() {
   };
 
   return (
-    <div className="space-y-3 p-4">
+    <div className="space-y-2.5 md:space-y-3 p-3 md:p-4">
       <div>
-        <h2 className="text-base font-semibold">Canvas Size</h2>
-        <p className="text-xs text-muted-foreground">Choose dimensions</p>
+        <h2 className="text-sm md:text-base font-semibold">Canvas Size</h2>
+        <p className="text-[10px] md:text-xs text-muted-foreground">Choose dimensions</p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-2 md:gap-3">
         {presetSizes.map((preset) => (
           <button
             key={preset.ratio}
             onClick={() => handlePreset(preset)}
-            className={`flex flex-col items-start gap-0.5 h-auto py-3 px-3 rounded-xl transition-all ${
+            className={`flex flex-col items-start gap-0.5 h-auto py-2.5 md:py-3 px-2.5 md:px-3 rounded-xl transition-all ${
               canvasSize.ratio === preset.ratio ? 'neu-inset' : 'neu-button'
             }`}
           >
-            <span className="text-sm font-semibold">{preset.ratio}</span>
-            <span className="text-[10px] text-muted-foreground">
+            <span className="text-xs md:text-sm font-semibold">{preset.ratio}</span>
+            <span className="text-[9px] md:text-[10px] text-muted-foreground">
               {preset.label}
             </span>
           </button>
@@ -55,7 +55,7 @@ export function SizeSelector() {
       </div>
 
       <div className="space-y-2">
-        <Label className="text-xs font-medium">Custom Size</Label>
+        <Label className="text-[10px] md:text-xs font-medium">Custom Size</Label>
         <div className="grid grid-cols-2 gap-2">
           <div>
             <Input
@@ -63,7 +63,7 @@ export function SizeSelector() {
               value={canvasSize.width}
               onChange={(e) => handleCustomSize('width', parseInt(e.target.value) || 0)}
               placeholder="Width"
-              className="neu-inset h-9 text-xs border-0"
+              className="neu-inset h-8 md:h-9 text-[10px] md:text-xs border-0"
             />
           </div>
           <div>
@@ -72,11 +72,11 @@ export function SizeSelector() {
               value={canvasSize.height}
               onChange={(e) => handleCustomSize('height', parseInt(e.target.value) || 0)}
               placeholder="Height"
-              className="neu-inset h-9 text-xs border-0"
+              className="neu-inset h-8 md:h-9 text-[10px] md:text-xs border-0"
             />
           </div>
         </div>
-        <p className="text-[10px] text-muted-foreground">
+        <p className="text-[9px] md:text-[10px] text-muted-foreground">
           Current: {canvasSize.width} × {canvasSize.height}px
         </p>
       </div>

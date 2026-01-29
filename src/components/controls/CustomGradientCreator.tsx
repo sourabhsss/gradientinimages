@@ -59,16 +59,16 @@ export function CustomGradientCreator() {
   const gradientPreview = `linear-gradient(${angle}deg, ${colors.join(', ')})`;
 
   return (
-    <div className="space-y-4 p-4">
+    <div className="space-y-3 md:space-y-4 p-3 md:p-4">
       <div className="flex items-center gap-2">
-        <div className="neu-raised-sm flex h-8 w-8 items-center justify-center rounded-lg">
-          <Palette className="h-4 w-4 text-primary" />
+        <div className="neu-raised-sm flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-lg">
+          <Palette className="h-3.5 w-3.5 md:h-4 md:w-4 text-primary" />
         </div>
-        <h2 className="text-base font-semibold">Custom Gradient</h2>
+        <h2 className="text-sm md:text-base font-semibold">Custom Gradient</h2>
       </div>
 
       {/* Gradient Preview */}
-      <div className="neu-inset h-24 w-full rounded-xl p-2">
+      <div className="neu-inset h-20 md:h-24 w-full rounded-xl p-2">
         <div
           className="h-full w-full rounded-lg"
           style={{ background: gradientPreview }}
@@ -78,7 +78,7 @@ export function CustomGradientCreator() {
       {/* Colors */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label className="text-xs">Colors</Label>
+          <Label className="text-[10px] md:text-xs">Colors</Label>
           <Button
             variant="ghost"
             size="sm"
@@ -93,7 +93,7 @@ export function CustomGradientCreator() {
         <div className="space-y-2">
           {colors.map((color, index) => (
             <div key={index} className="flex items-center gap-2">
-              <div className="neu-inset h-10 w-14 rounded-xl p-1 flex items-center justify-center">
+              <div className="neu-inset h-9 md:h-10 w-12 md:w-14 rounded-xl p-1 flex items-center justify-center">
                 <input
                   type="color"
                   value={color}
@@ -106,7 +106,7 @@ export function CustomGradientCreator() {
                 type="text"
                 value={color}
                 onChange={(e) => updateColor(index, e.target.value)}
-                className="neu-inset h-9 flex-1 text-xs border-0"
+                className="neu-inset h-8 md:h-9 flex-1 text-[10px] md:text-xs border-0"
                 placeholder="#000000"
               />
               {colors.length > 2 && (
@@ -114,9 +114,9 @@ export function CustomGradientCreator() {
                   variant="ghost"
                   size="sm"
                   onClick={() => removeColor(index)}
-                  className="neu-button h-9 w-9 p-0 hover:bg-destructive/10 hover:text-destructive"
+                  className="neu-button h-8 md:h-9 w-8 md:w-9 p-0 hover:bg-destructive/10 hover:text-destructive"
                 >
-                  <Trash2 className="h-3.5 w-3.5" />
+                  <Trash2 className="h-3 w-3 md:h-3.5 md:w-3.5" />
                 </Button>
               )}
             </div>
@@ -127,8 +127,8 @@ export function CustomGradientCreator() {
       {/* Angle */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label className="text-xs">Angle</Label>
-          <span className="text-xs text-muted-foreground">{angle}°</span>
+          <Label className="text-[10px] md:text-xs">Angle</Label>
+          <span className="text-[10px] md:text-xs text-muted-foreground">{angle}°</span>
         </div>
         <Slider
           value={[angle]}
@@ -142,23 +142,23 @@ export function CustomGradientCreator() {
 
       {/* Name */}
       <div className="space-y-2">
-        <Label className="text-xs">Gradient Name (Optional)</Label>
+        <Label className="text-[10px] md:text-xs">Gradient Name (Optional)</Label>
         <Input
           type="text"
           value={gradientName}
           onChange={(e) => setGradientName(e.target.value)}
           placeholder="My Custom Gradient"
-          className="h-8 text-xs"
+          className="h-7 md:h-8 text-[10px] md:text-xs"
         />
       </div>
 
       {/* Actions */}
       <div className="flex gap-2">
-        <button onClick={applyGradient} className="neu-button flex-1 py-2 rounded-xl text-sm font-medium bg-primary text-white">
+        <button onClick={applyGradient} className="neu-button flex-1 py-1.5 md:py-2 rounded-xl text-xs md:text-sm font-medium bg-primary text-white">
           Apply
         </button>
-        <button onClick={saveToFavorites} className="neu-button flex-1 py-2 rounded-xl text-sm font-medium">
-          Save to Favorites
+        <button onClick={saveToFavorites} className="neu-button flex-1 py-1.5 md:py-2 rounded-xl text-xs md:text-sm font-medium">
+          Save
         </button>
       </div>
     </div>
