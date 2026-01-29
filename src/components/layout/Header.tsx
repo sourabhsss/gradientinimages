@@ -1,4 +1,4 @@
-import { Download, Moon, Sun, RotateCcw } from 'lucide-react';
+import { Download, Moon, Sun, RotateCcw, Github } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -42,6 +42,32 @@ export function Header({ onExport }: HeaderProps) {
         </div>
         
         <div className="flex items-center gap-3">
+          <span className="text-xs font-medium text-muted-foreground">
+            Built with ❤️{' '}
+            <a
+              href="https://kombai.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-primary transition-colors hover:text-primary/80"
+            >
+              Kombai
+            </a>
+          </span>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <a
+                href="https://github.com/sourabhsss/gradientinimages"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="neu-button flex h-10 w-10 items-center justify-center rounded-xl text-muted-foreground transition-colors hover:text-foreground"
+              >
+                <Github className="h-5 w-5" />
+              </a>
+            </TooltipTrigger>
+            <TooltipContent side="bottom">View on GitHub</TooltipContent>
+          </Tooltip>
+
           <AlertDialog>
             <Tooltip>
               <TooltipTrigger asChild>
